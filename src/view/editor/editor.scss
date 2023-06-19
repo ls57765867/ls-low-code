@@ -3,7 +3,7 @@
   height:100%;
   &-left,&-right{
     position:absolute;
-    width: 270px;
+    width: 170px;
      background: red;
     top: 0;
     bottom: 0;
@@ -15,6 +15,8 @@
       background: #ccc;
       margin-top: 20px;
       height: 120px;
+      position: relative;
+
       & > span  {
         display: inline-block;
         background: #747bff;
@@ -27,6 +29,17 @@
         justify-content: center;
         align-items: center;
       }
+      &::before{
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #ccc;
+        opacity: .2;
+        z-index: 2;
+      }
     }
   }
   &-right{
@@ -34,13 +47,13 @@
   }
   &-top{
     position: absolute;
-    right: 280px;
-    left: 280px;
+    right: 180px;
+    left: 180px;
     height: 80px;
     background: blue;
   }
   &-container{
-    padding: 80px 270px 0;
+    padding: 80px 180px 0;
     height:100%;
     box-sizing: border-box;
     &-canvas{
@@ -56,4 +69,8 @@
   &-block{
     position: absolute;
   }
+}
+
+.is-focus{
+  border: 1px dashed red;
 }

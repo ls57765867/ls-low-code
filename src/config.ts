@@ -1,14 +1,17 @@
-type Block = {
+export type BlockItem = {
+  top: number
+  left: number
+  zIndex: number
+  key: string
+  alignCenter?: boolean
+  focus?: boolean
+}
+export type Block = {
   container: any
-  blocks: {
-    top: number
-    left: number
-    zIndex: number
-    key: string
-    alignCenter?: boolean
-  }[]
+  blocks: BlockItem[]
   test: any
 }
+
 const block: Block = {
   container: {
     width: '550px',

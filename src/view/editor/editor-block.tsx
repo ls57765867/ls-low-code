@@ -12,26 +12,26 @@ export default defineComponent({
     const editor = ref<HTMLDivElement>()
     const data = computed({
       get() {
-        return props
+        return props.block
       },
       set(val) {
         ctx.emit('update:block', val)
       }
     })
     const blockStyle = computed(() => ({
-      left: data.value.block.left + 'px',
-      top: data.value.block.top + 'px',
-      zIndex: data.value.block.zIndex
+      left: data.value.left + 'px',
+      top: data.value.top + 'px',
+      zIndex: data.value.zIndex
     }))
     const editorItem = computed(() => {
-      return (editorConfig as typeof editorConfig2).editorComponentMap[data.value.block.key]
+      return (editorConfig as typeof editorConfig2).editorComponentMap[data.value.key]
     })
 
     onMounted(() => {
-      if (data.value.block.alignCenter) {
+      if (data.value.alignCenter) {
         // 说明是拖动松手的才让位置居中
-        data.value.block.left -= editor.value!.offsetWidth / 2
-        data.value.block.top -= editor.value!.offsetHeight / 2
+        data.value.left -= editor.value!.offsetWidth / 2
+        data.value.top -= editor.value!.offsetHeight / 2
       }
     })
 

@@ -4,7 +4,9 @@ import EditorBlock from './editor-block'
 import { ElButton, ElInput } from 'element-plus'
 import { editorConfig as editorConfig2 } from './editor-utils'
 
-import type { ComponentInterface } from './editor-utils'
+import { useDrag } from '../../hooks/useDrag'
+import { useFocus } from '../../hooks/useFocus'
+import { useMove } from '../../hooks/useMove'
 export default defineComponent({
   props: {
     modelValue: {
@@ -32,43 +34,13 @@ export default defineComponent({
       width: data.value.container.width,
       height: data.value.container.height
     }))
-    const editorContainer = ref<HTMLDivElement>()
-    const currentEditor = ref<ComponentInterface>()
-    const dragenter = (e: DragEvent) => {
-      // 修改h5默认的拖动图标
-      e.dataTransfer!.dropEffect = 'move'
-    }
-    const dragover = (e: DragEvent) => {
-      e.preventDefault()
-    }
-    const dragleave = (e: DragEvent) => {
-      e.dataTransfer!.dropEffect = 'none'
-    }
-    const drop = (e: DragEvent) => {
-      data.value.blocks.push({
-        top: e.offsetY,
-        left: e.offsetX,
-        zIndex: 1,
-        key: currentEditor.value!.key,
-        alignCenter: true
-      })
-      // 重制component
-      currentEditor.value = undefined
-    }
 
-    /* 开始拖拽时触发的事件 */
-    const onDragstart = (e: DragEvent, component: ComponentInterface) => {
-      // 获取当前拖拽的component配置
-      currentEditor.value = component
-      // 拖拽进入container
-      editorContainer.value!.addEventListener('dragenter', e => dragenter(e))
-      // 拖拽经过 比如阻止默认事件否则不能drop放下
-      editorContainer.value!.addEventListener('dragover', dragover)
-      // 拖拽离开事件
-      editorContainer.value!.addEventListener('dragleave', dragleave)
-      // 拖拽放下
-      editorContainer.value!.addEventListener('drop', drop)
-    }
+    // 1. 处理拖拽事件
+    const { onDragstart, editorContainer } = useDrag(data)
+    // 2. 处理点击获得焦点
+    const { handleClick, clearFocus, focusData } = useFocus(data, e => handleMove(e))
+    // 3. 处理拖拽事件
+    const { handleMove } = useMove(focusData)
     return () => (
       <div class="editor">
         <div class="editor-left">
@@ -83,9 +55,13 @@ export default defineComponent({
         <div class="editor-right">顶部</div>
         <div class="editor-container">
           <div ref={editorContainer} class="editor-container-canvas">
-            <div class="editor-container-canvas__content" style={containerStyle.value}>
+            <div class="editor-container-canvas__content" onMousedown={clearFocus} style={containerStyle.value}>
               {data.value.blocks.map(item => (
-                <editor-block v-model:block={item}></editor-block>
+                <editor-block
+                  v-model:block={item}
+                  onMousedown={(e: MouseEvent) => handleClick(e, item)}
+                  class={item.focus ? 'is-focus' : ''}
+                ></editor-block>
               ))}
             </div>
           </div>
