@@ -1,14 +1,21 @@
 import { ElButton, ElInput } from 'element-plus'
 import type { Component } from 'vue'
 
+export interface ComponentInterface {
+  label: string
+  key: string
+  preview: () => string | Component
+  render: () => string | Component
+}
+
 function createEditorConfig() {
-  const editorComponentList = [] as any[] // 左侧菜单使用的list
-  const editorComponentMap = {} // 中间container中使用的
+  const editorComponentList = [] as ComponentInterface[] // 左侧菜单使用的list
+  const editorComponentMap: Record<string, ComponentInterface> = {} // 中间container中使用的
 
   return {
     editorComponentList,
     editorComponentMap,
-    register(com) {
+    register(com: ComponentInterface) {
       editorComponentList.push(com)
       editorComponentMap[com.key] = com
     }

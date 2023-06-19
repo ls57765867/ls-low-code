@@ -1,4 +1,15 @@
-export default {
+type Block = {
+  container: any
+  blocks: {
+    top: number
+    left: number
+    zIndex: number
+    key: string
+    alignCenter?: boolean
+  }[]
+  test: any
+}
+const block: Block = {
   container: {
     width: '550px',
     height: '1000px'
@@ -10,3 +21,5 @@ export default {
   ],
   test: 'test'
 }
+
+export default block

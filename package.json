@@ -9,6 +9,7 @@
   "dependencies": {
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "element-plus": "^2.3.1",
+    "eslint": "7.x",
     "pinia": "^2.0.33",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
@@ -20,7 +21,6 @@
     "@vue/eslint-config-typescript": "^11.0.2",
     "autoprefixer": "^10.4.14",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.27.5",

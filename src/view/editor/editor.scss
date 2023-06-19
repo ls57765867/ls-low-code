@@ -10,6 +10,24 @@
   }
   &-left{
     left: 0;
+    &-item{
+      width: 100%;
+      background: #ccc;
+      margin-top: 20px;
+      height: 120px;
+      & > span  {
+        display: inline-block;
+        background: #747bff;
+        padding: 5px;
+      }
+      div {
+        width: 100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
   }
   &-right{
     right: 0;
@@ -25,7 +43,6 @@
     padding: 80px 270px 0;
     height:100%;
     box-sizing: border-box;
-    position: relative;
     &-canvas{
       overflow: scroll;
       height: 100%;
