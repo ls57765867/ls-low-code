@@ -1,26 +1,14 @@
-export type BlockItem = {
-  top: number
-  left: number
-  zIndex: number
-  key: string
-  alignCenter?: boolean
-  focus?: boolean
-}
-export type Block = {
-  container: any
-  blocks: BlockItem[]
-  test: any
-}
+import { Block } from './types/editor'
 
 const block: Block = {
   container: {
     width: '550px',
-    height: '1000px'
+    height: '700px'
   },
   blocks: [
-    { top: 100, left: 100, zIndex: 1, key: 'text' },
-    { top: 200, left: 200, zIndex: 1, key: 'button' },
-    { top: 300, left: 300, zIndex: 1, key: 'input' }
+    // { top: 100, left: 100, zIndex: 1, key: 'text' },
+    { top: 100, left: 200, zIndex: 1, key: 'button' },
+    { top: 200, left: 100, zIndex: 1, key: 'input' }
   ],
   test: 'test'
 }

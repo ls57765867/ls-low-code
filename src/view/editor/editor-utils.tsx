@@ -34,7 +34,7 @@ editorConfig.register({
 editorConfig.register({
   label: '按钮',
   preview: () => <ElButton>预览按钮</ElButton>,
-  render: () => <ElButton>渲染按钮</ElButton>,
+  render: () => <ElButton style="height:200px">渲染按钮</ElButton>,
   key: 'button'
 })
 

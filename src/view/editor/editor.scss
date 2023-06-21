@@ -1,23 +1,24 @@
-.editor{
-  width:100%;
-  height:100%;
-  &-left,&-right{
-    position:absolute;
+.editor {
+  width: 100%;
+  height: 100%;
+  &-left,
+  &-right {
+    position: absolute;
     width: 170px;
-     background: red;
+    background: red;
     top: 0;
     bottom: 0;
   }
-  &-left{
+  &-left {
     left: 0;
-    &-item{
+    &-item {
       width: 100%;
       background: #ccc;
       margin-top: 20px;
       height: 120px;
       position: relative;
 
-      & > span  {
+      & > span {
         display: inline-block;
         background: #747bff;
         padding: 5px;
@@ -29,7 +30,7 @@
         justify-content: center;
         align-items: center;
       }
-      &::before{
+      &::before {
         content: '';
         position: absolute;
         left: 0;
@@ -37,40 +38,54 @@
         right: 0;
         bottom: 0;
         background: #ccc;
-        opacity: .2;
+        opacity: 0.2;
         z-index: 2;
       }
     }
   }
-  &-right{
+  &-right {
     right: 0;
   }
-  &-top{
+  &-top {
     position: absolute;
     right: 180px;
     left: 180px;
     height: 80px;
     background: blue;
   }
-  &-container{
+  &-container {
     padding: 80px 180px 0;
-    height:100%;
     box-sizing: border-box;
-    &-canvas{
+    &-canvas {
       overflow: scroll;
-      height: 100%;
       position: relative;
-      &__content{
+      &__content {
         margin: 20px auto;
         background: yellow;
+        position: relative;
       }
     }
+    &__mark-line-y {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border: 1px dashed red;
+      z-index: 9;
+    }
   }
-  &-block{
+  &-block {
     position: absolute;
   }
 }
 
-.is-focus{
+.is-focus {
   border: 1px dashed red;
+}
+
+.editor-container__mark-line-x {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border: 1px dashed red;
+  z-index: 9;
 }
