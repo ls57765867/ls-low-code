@@ -13,3 +13,17 @@ export type Block = {
   blocks: BlockItem[]
   test: any
 }
+
+export type Command = {
+  name: string
+  keyboard?: string
+  init?: () => void
+  before?: BlockItem[]
+  after?: BlockItem[]
+  pushQueue?: boolean
+  execute: () => {
+    handler?: any
+    back?: any
+    redo?: any
+  }
+}

@@ -7,8 +7,8 @@ import { editorConfig as editorConfig2 } from './editor-utils'
 import { useDrag } from '../../hooks/useDrag'
 import { useFocus } from '../../hooks/useFocus'
 import { useMove } from '../../hooks/useMove'
+import { useCommand } from '../../hooks/useCommand'
 
-import type { BlockItem } from './editor-block'
 export default defineComponent({
   props: {
     modelValue: {
@@ -32,13 +32,28 @@ export default defineComponent({
         ctx.emit('update:modelValue', val)
       }
     })
+    const command = useCommand(data)
+    const buttons = [
+      {
+        label: '撤销',
+        handler: () => {
+          command.commands.undo()
+        }
+      },
+      {
+        label: '重做',
+        handler: () => {
+          command.commands.redo()
+        }
+      }
+    ]
     const containerStyle = computed(() => ({
       width: data.value.container.width,
       height: data.value.container.height
     }))
 
     // 1. 处理拖拽事件
-    const { onDragstart, editorContainer } = useDrag(data)
+    const { onDragstart, onDragend, editorContainer } = useDrag(data)
     // 2. 处理点击获得焦点
     const { handleClick, clearFocus, focusData, lastBlock } = useFocus(data, e => handleMove(e))
     // 3. 处理拖拽事件
@@ -47,14 +62,20 @@ export default defineComponent({
       <div class="editor">
         <div class="editor-left">
           {editorConfig!.editorComponentList.map(item => (
-            <div class="editor-left-item" draggable onDragstart={e => onDragstart(e, item)}>
+            <div class="editor-left-item" draggable onDragstart={e => onDragstart(e, item)} onDragend={onDragend}>
               <span>{item.label}</span>
               <div>{item.preview()}</div>
             </div>
           ))}
         </div>
-        <div class="editor-top">右侧</div>
-        <div class="editor-right">顶部 {}</div>
+        <div class="editor-top">
+          {buttons.map(item => (
+            <div class="editor-top-button" onClick={item.handler}>
+              {item.label}
+            </div>
+          ))}
+        </div>
+        <div class="editor-right">右侧</div>
         <div class="editor-container">
           <div ref={editorContainer} class="editor-container-canvas">
             <div class="editor-container-canvas__content" onMousedown={clearFocus} style={containerStyle.value}>

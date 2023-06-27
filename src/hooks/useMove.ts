@@ -1,5 +1,6 @@
 import { WritableComputedRef } from 'vue'
 import { BlockItem } from '../types/editor'
+import { events } from './useCommand'
 
 export function useMove(
   focusData: WritableComputedRef<{ focusList: BlockItem[]; unFocusList: BlockItem[] }>,
@@ -18,6 +19,7 @@ export function useMove(
   }
   // 处理拖拽的逻辑·
   function handleMove(e: MouseEvent) {
+    events.emit('start')
     let startClint = {
       x: e.clientX,
       y: e.clientY,
@@ -30,34 +32,26 @@ export function useMove(
     // 为未选中与unFocusList 与中轴线添加辅助线
     const BWidth = lastBlock.value.width
     const BHeight = lastBlock.value.height
-    focusData.value.unFocusList
-      .concat({
-        top: 0,
-        left: 0,
-        width: parseInt(containerStyle.value.width),
-        height: parseInt(containerStyle.value.height)
-      })
-      .forEach(item => {
-        // 获取y轴上的5个点 showTop表示辅助线出现的位置 top代表B多高时触发辅助线
-        startClint.lines.y.push({
-          showTop: item.top + item.height! / 2,
-          top: item.top + item.height! / 2 - BHeight! / 2
-        }) // A中对B中
-        startClint.lines.y.push({ showTop: item.top, top: item.top }) // A顶对B顶
-        startClint.lines.y.push({ showTop: item.top, top: item.top - BHeight! }) // A顶对B底
-        startClint.lines.y.push({ showTop: item.top + item.height!, top: item.top + item.height! }) // A底对B顶
-        startClint.lines.y.push({ showTop: item.top + item.height!, top: item.top + item.height! - BHeight! }) // A底对B底
+    focusData.value.unFocusList.forEach(item => {
+      // 获取y轴上的5个点 showTop表示辅助线出现的位置 top代表B多高时触发辅助线
+      startClint.lines.y.push({
+        showTop: item.top + item.height! / 2,
+        top: item.top + item.height! / 2 - BHeight! / 2
+      }) // A中对B中
+      startClint.lines.y.push({ showTop: item.top, top: item.top }) // A顶对B顶
+      startClint.lines.y.push({ showTop: item.top, top: item.top - BHeight! }) // A顶对B底
+      startClint.lines.y.push({ showTop: item.top + item.height!, top: item.top + item.height! }) // A底对B顶
+      startClint.lines.y.push({ showTop: item.top + item.height!, top: item.top + item.height! - BHeight! }) // A底对B底
 
-        startClint.lines.x.push({
-          showLeft: item.left + item.width! / 2,
-          left: item.left + item.width! / 2 - BWidth! / 2
-        }) // A中对B中
-        startClint.lines.x.push({ showLeft: item.left, left: item.left }) // A左边对B左
-        startClint.lines.x.push({ showLeft: item.left + item.width!, left: item.left + item.width! }) //
-        startClint.lines.x.push({ showLeft: item.left + item.width!, left: item.left + item.width! - BWidth! }) // A底对B顶
-        startClint.lines.x.push({ showLeft: item.left, left: item.left - BWidth! }) //  A左对B右
-      })
-    console.log(startClint.lines.x)
+      startClint.lines.x.push({
+        showLeft: item.left + item.width! / 2,
+        left: item.left + item.width! / 2 - BWidth! / 2
+      }) // A中对B中
+      startClint.lines.x.push({ showLeft: item.left, left: item.left }) // A左边对B左
+      startClint.lines.x.push({ showLeft: item.left + item.width!, left: item.left + item.width! }) //
+      startClint.lines.x.push({ showLeft: item.left + item.width!, left: item.left + item.width! - BWidth! }) // A底对B顶
+      startClint.lines.x.push({ showLeft: item.left, left: item.left - BWidth! }) //  A左对B右
+    })
 
     // move事件改编每个item移动的位置
     const mousemove = (e: MouseEvent) => {
@@ -98,6 +92,9 @@ export function useMove(
       resetMarkLine()
       document.removeEventListener('mousemove', mousemove)
       document.removeEventListener('mouseup', mouseup)
+      nextTick(() => {
+        events.emit('end')
+      })
     }
     document.addEventListener('mousemove', mousemove)
     document.addEventListener('mouseup', mouseup)

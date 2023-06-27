@@ -1,10 +1,13 @@
 import { ComponentInterface } from '../view/editor/editor-utils'
+import { events } from './useCommand'
+
 import type { WritableComputedRef } from 'vue'
-import type { Block } from '../config'
+import type { Block } from '../types/editor'
 
 export function useDrag(data: WritableComputedRef<Block>) {
   const editorContainer = ref<HTMLDivElement>()
   const currentEditor = ref<ComponentInterface>()
+  const temp = (e: DragEvent) => dragenter(e)
   const dragenter = (e: DragEvent) => {
     // 修改h5默认的拖动图标
     e.dataTransfer!.dropEffect = 'move'
@@ -16,13 +19,19 @@ export function useDrag(data: WritableComputedRef<Block>) {
     e.dataTransfer!.dropEffect = 'none'
   }
   const drop = (e: DragEvent) => {
-    data.value.blocks.push({
-      top: e.offsetY,
-      left: e.offsetX,
-      zIndex: 1,
-      key: currentEditor.value!.key,
-      alignCenter: true
-    })
+    data.value = {
+      ...data.value,
+      blocks: [
+        ...data.value.blocks,
+        {
+          top: e.offsetY,
+          left: e.offsetX,
+          zIndex: 1,
+          key: currentEditor.value!.key,
+          alignCenter: true
+        }
+      ]
+    }
     // 重制component
     currentEditor.value = undefined
   }
@@ -32,17 +41,31 @@ export function useDrag(data: WritableComputedRef<Block>) {
     // 获取当前拖拽的component配置
     currentEditor.value = component
     // 拖拽进入container
-    editorContainer.value!.addEventListener('dragenter', e => dragenter(e))
+    editorContainer.value!.addEventListener('dragenter', temp)
     // 拖拽经过 比如阻止默认事件否则不能drop放下
     editorContainer.value!.addEventListener('dragover', dragover)
     // 拖拽离开事件
     editorContainer.value!.addEventListener('dragleave', dragleave)
     // 拖拽放下
     editorContainer.value!.addEventListener('drop', drop)
+    events.emit('start')
+  }
+  const onDragend = () => {
+    // // 拖拽进入container
+    editorContainer.value!.removeEventListener('dragenter', temp)
+    // 拖拽经过 比如阻止默认事件否则不能drop放下
+    editorContainer.value!.removeEventListener('dragover', dragover)
+    // 拖拽离开事件
+    editorContainer.value!.removeEventListener('dragleave', dragleave)
+    // 拖拽放下
+    editorContainer.value!.removeEventListener('drop', drop)
+    nextTick(() => {
+      events.emit('end')
+    })
   }
   return {
     onDragstart,
     editorContainer,
-    currentEditor
+    onDragend
   }
 }

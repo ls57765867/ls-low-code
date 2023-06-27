@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import config from './config'
-import { defineComponent, reactive } from 'vue'
+import { defineComponent } from 'vue'
 import Editor from './view/editor/editor'
 import { editorConfig } from './view/editor/editor-utils'
 export default defineComponent({
@@ -15,7 +15,7 @@ export default defineComponent({
     Editor
   },
   setup() {
-    const state = reactive(config)
+    const state = ref(config)
     provide('editorConfig', editorConfig)
     return {
       state

@@ -33,7 +33,6 @@ export default defineComponent({
         data.value.left -= editor.value!.offsetWidth / 2
         data.value.top -= editor.value!.offsetHeight / 2
       }
-      console.log(editor.value)
       data.value.width = editor.value!.offsetWidth
       data.value.height = editor.value!.offsetHeight
     })

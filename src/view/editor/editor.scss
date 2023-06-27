@@ -5,7 +5,7 @@
   &-right {
     position: absolute;
     width: 170px;
-    background: red;
+    background: #eee;
     top: 0;
     bottom: 0;
   }
@@ -51,17 +51,29 @@
     right: 180px;
     left: 180px;
     height: 80px;
-    background: blue;
+    display: flex;
+    justify-content: center;
+    &-button {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      cursor: pointer;
+      & + & {
+        margin-left: 5px;
+      }
+    }
   }
   &-container {
     padding: 80px 180px 0;
     box-sizing: border-box;
     &-canvas {
-      overflow: scroll;
       position: relative;
+      height: calc(100vh - 120px);
       &__content {
-        margin: 20px auto;
-        background: yellow;
         position: relative;
       }
     }
