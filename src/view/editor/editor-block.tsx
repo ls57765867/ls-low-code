@@ -28,10 +28,11 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if (data.value.alignCenter) {
+      if (data.value.alignCenter && data.value.firstRender) {
         // 说明是拖动松手的才让位置居中
         data.value.left -= editor.value!.offsetWidth / 2
         data.value.top -= editor.value!.offsetHeight / 2
+        data.value.firstRender = false
       }
       data.value.width = editor.value!.offsetWidth
       data.value.height = editor.value!.offsetHeight

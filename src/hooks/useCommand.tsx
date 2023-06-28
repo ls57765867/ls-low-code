@@ -1,8 +1,7 @@
 import { WritableComputedRef } from 'vue'
 import Mitt from 'mitt'
-import { render } from 'vue'
 import deepclone from 'deepcopy'
-import type { Block, Command } from '../types/editor'
+import type { Block, BlockItem, Command } from '../types/editor'
 
 // @ts-ignore
 export const events = new Mitt()
@@ -10,7 +9,7 @@ export function useCommand(data: WritableComputedRef<Block>) {
   const state: {
     current: number
     queue: any[]
-    commands: Record<string, () => void>
+    commands: Record<string, (blocks?: BlockItem[]) => void>
     commandArray: Command[]
     delArray: any[]
   } = {
@@ -25,8 +24,8 @@ export function useCommand(data: WritableComputedRef<Block>) {
 
   const registry = (command: Command) => {
     state.commandArray.push(command)
-    state.commands[command.name] = () => {
-      const { handler, back, redo } = command.execute()
+    state.commands[command.name] = (blocks?: BlockItem[]) => {
+      const { handler, back, redo } = command.execute(blocks)
       handler && handler()
       if (command.pushQueue) {
         if (state.queue.length > 0) {
@@ -94,8 +93,9 @@ export function useCommand(data: WritableComputedRef<Block>) {
       }
     },
     execute() {
-      const before = this.before
+      const before = deepclone(this.before)
       const after = deepclone(data.value.blocks)
+
       return {
         redo() {
           data.value = { ...data.value, blocks: after }
@@ -106,6 +106,112 @@ export function useCommand(data: WritableComputedRef<Block>) {
       }
     }
   })
+
+  registry({
+    name: 'export',
+    execute() {
+      return {}
+    }
+  })
+
+  registry({
+    name: 'import',
+    pushQueue: true,
+    execute(after) {
+      let before = deepclone(data.value.blocks)
+      console.log(after)
+
+      return {
+        handler() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        redo() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        back() {
+          data.value = { ...data.value, blocks: before! }
+        }
+      }
+    }
+  })
+
+  registry({
+    name: 'top',
+    pushQueue: true,
+    execute() {
+      let before = deepclone(data.value.blocks)
+      let maxIndex = data.value.blocks.sort((a, b) => b.zIndex - a.zIndex)[0].zIndex
+      let after = data.value.blocks.map(item => {
+        if (item.focus) {
+          item.zIndex = maxIndex + 1
+        }
+        return item
+      })
+
+      return {
+        handler() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        redo() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        back() {
+          data.value = { ...data.value, blocks: before! }
+        }
+      }
+    }
+  })
+
+  registry({
+    name: 'bottom',
+    pushQueue: true,
+    execute() {
+      let before = deepclone(data.value.blocks)
+      let after = data.value.blocks.map(item => {
+        if (item.focus) {
+          item.zIndex = 1
+        } else {
+          item.zIndex++
+        }
+        return item
+      })
+
+      return {
+        handler() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        redo() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        back() {
+          data.value = { ...data.value, blocks: before! }
+        }
+      }
+    }
+  })
+
+  registry({
+    name: 'delete',
+    pushQueue: true,
+    execute() {
+      let before = deepclone(data.value.blocks)
+      let after = data.value.blocks.filter(item => !item.focus)
+
+      return {
+        handler() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        redo() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        back() {
+          data.value = { ...data.value, blocks: before! }
+        }
+      }
+    }
+  })
+
+  // 默认执行init方法
   ;(() => {
     state.commandArray.forEach(item => {
       if (item.init) {

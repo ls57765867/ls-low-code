@@ -28,7 +28,8 @@ export function useDrag(data: WritableComputedRef<Block>) {
           left: e.offsetX,
           zIndex: 1,
           key: currentEditor.value!.key,
-          alignCenter: true
+          alignCenter: true,
+          firstRender: true // 是否为首次渲染,首次渲染才剧中
         }
       ]
     }

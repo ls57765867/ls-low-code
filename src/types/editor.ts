@@ -1,12 +1,13 @@
 export type BlockItem = {
   top: number
   left: number
-  zIndex?: number
+  zIndex: number
   key?: string
   alignCenter?: boolean
   focus?: boolean
   width?: number
   height?: number
+  firstRender?: boolean
 }
 export type Block = {
   container: any
@@ -21,7 +22,7 @@ export type Command = {
   before?: BlockItem[]
   after?: BlockItem[]
   pushQueue?: boolean
-  execute: () => {
+  execute: (blocks?: BlockItem[]) => {
     handler?: any
     back?: any
     redo?: any

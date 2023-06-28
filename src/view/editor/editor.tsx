@@ -8,6 +8,8 @@ import { useDrag } from '../../hooks/useDrag'
 import { useFocus } from '../../hooks/useFocus'
 import { useMove } from '../../hooks/useMove'
 import { useCommand } from '../../hooks/useCommand'
+import { useDialog } from '../../hooks/useDialog'
+import { BlockItem } from '../../types/editor'
 
 export default defineComponent({
   props: {
@@ -33,6 +35,9 @@ export default defineComponent({
       }
     })
     const command = useCommand(data)
+    const isFocus = computed(() => {
+      return data.value.blocks.find(item => item.focus)
+    })
     const buttons = [
       {
         label: '撤销',
@@ -44,6 +49,49 @@ export default defineComponent({
         label: '重做',
         handler: () => {
           command.commands.redo()
+        }
+      },
+      {
+        label: '导出',
+        handler: () => {
+          useDialog({
+            title: '导出',
+            show: true,
+            content: JSON.stringify(data.value.blocks),
+            type: 'export'
+          })
+        }
+      },
+      {
+        label: '导入',
+        handler: () => {
+          useDialog({
+            title: '导入',
+            show: true,
+            content: '',
+            type: 'import',
+            callback(options) {
+              command.commands.import(JSON.parse(options.content) as BlockItem[])
+            }
+          })
+        }
+      },
+      {
+        label: '置顶',
+        handler: () => {
+          isFocus.value && command.commands.top()
+        }
+      },
+      {
+        label: '置底',
+        handler: () => {
+          isFocus.value && command.commands.bottom()
+        }
+      },
+      {
+        label: '删除',
+        handler: () => {
+          isFocus.value && command.commands.delete()
         }
       }
     ]
