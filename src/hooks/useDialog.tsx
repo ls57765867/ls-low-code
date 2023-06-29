@@ -1,5 +1,6 @@
 import { ElDialog, ElButton, ElInput } from 'element-plus'
 import { createVNode, defineComponent, render, Teleport } from 'vue'
+import type { Options } from '../types/editor'
 import type { VNode } from 'vue'
 let dialog: VNode | null
 const dialogComponent = defineComponent({
@@ -18,17 +19,17 @@ const dialogComponent = defineComponent({
     ElInput
   },
   setup(_props, ctx) {
-    let state = reactive({
+    let state = reactive<Options>({
       show: true,
       title: '',
       content: '',
       type: '',
-      callback: null
+      callback: () => {}
     })
     state = Object.assign(state, toRaw(_props))
 
     ctx.expose({
-      showDialog(options) {
+      showDialog(options: Options) {
         state = Object.assign(state, { ...options })
       }
     })
@@ -42,7 +43,6 @@ const dialogComponent = defineComponent({
       }
       state.callback && state.callback(state)
     }
-
     return () => (
       <>
         <Teleport to="body" disabled={!state.show}>
@@ -72,15 +72,13 @@ const dialogComponent = defineComponent({
   }
 })
 
-export function useDialog(options) {
+export function useDialog(options: Options) {
   if (!dialog) {
     const el = document.createElement('div')
     const node = createVNode(dialogComponent, { ...options })
     render(node, el)
     dialog = node
   } else {
-    console.log(222)
-
     dialog.component?.exposed?.showDialog(options)
   }
 }

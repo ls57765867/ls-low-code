@@ -71,7 +71,7 @@ export default defineComponent({
             content: '',
             type: 'import',
             callback(options) {
-              command.commands.import(JSON.parse(options.content) as BlockItem[])
+              command.commands.import(JSON.parse(options!.content) as BlockItem[])
             }
           })
         }

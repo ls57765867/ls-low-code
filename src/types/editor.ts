@@ -28,3 +28,11 @@ export type Command = {
     redo?: any
   }
 }
+
+export type Options = {
+  title: string
+  show: boolean
+  content: string
+  type: string
+  callback?: (options?: Options) => void
+}
