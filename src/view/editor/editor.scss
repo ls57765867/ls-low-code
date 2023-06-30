@@ -45,6 +45,7 @@
   }
   &-right {
     right: 0;
+    width: 200px;
   }
   &-top {
     position: absolute;
@@ -75,6 +76,9 @@
       height: calc(100vh - 120px);
       &__content {
         position: relative;
+        .is-focus {
+          border: 1px dashed red;
+        }
       }
     }
     &__mark-line-y {
@@ -88,10 +92,6 @@
   &-block {
     position: absolute;
   }
-}
-
-.is-focus {
-  border: 1px dashed red;
 }
 
 .editor-container__mark-line-x {

@@ -1,11 +1,10 @@
-import { Names } from './store-name'
 import { defineStore } from 'pinia'
 
 interface StateInterface {
   name: string
   age: number
 }
-export const useBaseStore = defineStore(Names.TEST, {
+export const useBaseStore = defineStore('test', {
   state: (): StateInterface => ({
     name: '小三',
     age: 18

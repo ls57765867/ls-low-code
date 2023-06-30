@@ -37,10 +37,11 @@ export default defineComponent({
       data.value.width = editor.value!.offsetWidth
       data.value.height = editor.value!.offsetHeight
     })
+    const reactiveData = inject('reactiveData')
 
     return () => (
       <div ref={editor} class="editor-block" style={blockStyle.value}>
-        {editorItem.value.render()}
+        {editorItem.value.render(props.block, reactiveData)}
       </div>
     )
   }

@@ -26,7 +26,8 @@ export function useMove(
       lines: {
         x: [] as any,
         y: [] as any
-      }
+      },
+      isMove: false
     }
 
     // 为未选中与unFocusList 与中轴线添加辅助线
@@ -55,6 +56,7 @@ export function useMove(
 
     // move事件改编每个item移动的位置
     const mousemove = (e: MouseEvent) => {
+      startClint.isMove = true
       let durX = e.clientX - startClint.x
       let durY = e.clientY - startClint.y
       let left = lastBlock.value.left + durX
@@ -93,7 +95,9 @@ export function useMove(
       document.removeEventListener('mousemove', mousemove)
       document.removeEventListener('mouseup', mouseup)
       nextTick(() => {
-        events.emit('end')
+        if (startClint.isMove) {
+          events.emit('end')
+        }
       })
     }
     document.addEventListener('mousemove', mousemove)

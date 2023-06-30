@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <h1 style="position: fixed; right: 0; bottom: 0">{{ reactiveData.name }}</h1>
     <editor v-model="state" test="test"></editor>
   </div>
 </template>
@@ -16,9 +17,16 @@ export default defineComponent({
   },
   setup() {
     const state = ref(config)
+    const reactiveData = reactive({
+      name: 'zs',
+      age: 18
+    })
+
     provide('editorConfig', editorConfig)
+    provide('reactiveData', reactiveData)
     return {
-      state
+      state,
+      reactiveData
     }
   }
 })

@@ -1,11 +1,16 @@
 import type { Block, BlockItem } from '../types/editor'
 import type { WritableComputedRef } from 'vue'
 // eslint-disable-next-line no-unused-vars
-export function useFocus(data: WritableComputedRef<Block>, callback: (e: MouseEvent) => void) {
+export function useFocus(data: WritableComputedRef<Block>, isPreview: Ref<boolean>, callback: (e: MouseEvent) => void) {
   // 最后选中的index和block
   const currentIndex = ref(-1)
-  const lastBlock = computed(() => {
-    return data.value.blocks[currentIndex.value]
+  const lastBlock = computed({
+    get() {
+      return data.value.blocks[currentIndex.value]
+    },
+    set(val) {
+      data.value.blocks[currentIndex.value] = val
+    }
   })
   // 点击container空白处删除所有的选中状态
   const clearFocus = () => {
@@ -38,8 +43,10 @@ export function useFocus(data: WritableComputedRef<Block>, callback: (e: MouseEv
    * @param index 下标
    */
   const handleClick = (e: MouseEvent, item: BlockItem, index: number) => {
+    if (isPreview.value) return null
     e.preventDefault()
     e.stopPropagation()
+
     if (e.shiftKey) {
       if (focusData.value.focusList.length <= 1) {
         item.focus = true
@@ -60,6 +67,7 @@ export function useFocus(data: WritableComputedRef<Block>, callback: (e: MouseEv
     handleClick,
     focusData,
     clearFocus,
-    lastBlock
+    lastBlock,
+    currentIndex
   }
 }

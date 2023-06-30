@@ -8,6 +8,7 @@ export type BlockItem = {
   width?: number
   height?: number
   firstRender?: boolean
+  props: any
 }
 export type Block = {
   container: any

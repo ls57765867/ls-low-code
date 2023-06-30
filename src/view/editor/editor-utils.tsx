@@ -5,7 +5,7 @@ export interface ComponentInterface {
   label: string
   key: string
   preview: () => string | Component
-  render: () => string | Component
+  render: (props?: any) => string | Component
 }
 
 function createEditorConfig() {
@@ -34,13 +34,15 @@ editorConfig.register({
 editorConfig.register({
   label: '按钮',
   preview: () => <ElButton>预览按钮</ElButton>,
-  render: () => <ElButton style="height:200px">渲染按钮</ElButton>,
+  render: ({ props }) => <ElButton {...props}>{props.label}</ElButton>,
   key: 'button'
 })
 
 editorConfig.register({
   label: '输入框',
   preview: () => <ElInput>预览文本</ElInput>,
-  render: () => <ElInput>渲染文本</ElInput>,
+  render: (props, reactiveData) => {
+    return <ElInput v-model={reactiveData[props.model]}></ElInput>
+  },
   key: 'input'
 })

@@ -29,7 +29,12 @@ export function useDrag(data: WritableComputedRef<Block>) {
           zIndex: 1,
           key: currentEditor.value!.key,
           alignCenter: true,
-          firstRender: true // 是否为首次渲染,首次渲染才剧中
+          firstRender: true, // 是否为首次渲染,首次渲染才剧中
+          props: {
+            label: '渲染按钮',
+            type: 'primary',
+            size: 'default'
+          }
         }
       ]
     }

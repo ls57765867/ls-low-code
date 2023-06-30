@@ -119,7 +119,6 @@ export function useCommand(data: WritableComputedRef<Block>) {
     pushQueue: true,
     execute(after) {
       let before = deepclone(data.value.blocks)
-      console.log(after)
 
       return {
         handler() {
@@ -196,6 +195,26 @@ export function useCommand(data: WritableComputedRef<Block>) {
     execute() {
       let before = deepclone(data.value.blocks)
       let after = data.value.blocks.filter(item => !item.focus)
+
+      return {
+        handler() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        redo() {
+          data.value = { ...data.value, blocks: after! }
+        },
+        back() {
+          data.value = { ...data.value, blocks: before! }
+        }
+      }
+    }
+  })
+
+  registry({
+    name: 'updateComponent',
+    pushQueue: true,
+    execute(after) {
+      let before = deepclone(data.value.blocks)
 
       return {
         handler() {

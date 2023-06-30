@@ -23,7 +23,7 @@ module.exports = {
     // 禁止重新设置函数
     'no-param-reassign': 'off',
     // 禁止未使用的变量 https://eslint.org/docs/rules/no-unused-vars#disallow-unused-variables-no-unused-vars
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'warn',
     'linebreak-style': ['off', 'windows'],
     'no-const-assign': 2, // 禁止修改const声明的变量
     // quotes: ['error', 'single'], // 引号类型 `` "" ''
